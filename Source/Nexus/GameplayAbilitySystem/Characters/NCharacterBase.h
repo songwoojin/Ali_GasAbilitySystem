@@ -8,6 +8,8 @@
 #include "AbilitySystemComponent.h"
 #include "NCharacterBase.generated.h"
 
+class UNBasicAttributeSets;
+
 UCLASS()
 class NEXUS_API ANCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
@@ -20,6 +22,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem")
 	UAbilitySystemComponent* ASC;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem")
+	UNBasicAttributeSets* BasicAttributeSets;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="AbilitySystem")
 	EGameplayEffectReplicationMode ASCReplicationMode;

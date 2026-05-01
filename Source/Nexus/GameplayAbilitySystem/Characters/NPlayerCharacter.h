@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "NCharacterBase.h"
+#include "GameplayEffect.h"
 #include "NPlayerCharacter.generated.h"
 
 class UGameplayAbility;
+class UGameplayEffect;
 class UInputAction;
+
 
 /**
  * 
@@ -24,6 +27,8 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Ability")
 	TSubclassOf<UGameplayAbility> DashAbility;
 
+	UPROPERTY(EditAnywhere,Category="Effect")
+	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 public:
 	ANPlayerCharacter();
 
@@ -33,5 +38,5 @@ protected:
 	void GiveAbility();
 	void Input_Dash();
 	
-	
+	void HandleStaminaChanged(const FOnAttributeChangeData& Data);
 };

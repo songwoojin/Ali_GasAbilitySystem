@@ -24,6 +24,8 @@ void UNDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	CommitAbilityCost(Handle, ActorInfo, ActivationInfo);
+	
 	//UE_LOG(LogTemp, Warning, TEXT("Active Dash Ability"));
 	UAbilityTask_ApplyRootMotionConstantForce* Task =
 		UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
@@ -103,5 +105,21 @@ float UNDashAbility::GetMaxSpeed()
 
 void UNDashAbility::OnDashFinished()
 {
+	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, nullptr);
+	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+bool UNDashAbility::CommitAbilityCost(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	FGameplayTagContainer* OptionalRelevantTags)
+{
+	return Super::CommitAbilityCost(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
+}
+
+bool UNDashAbility::CommitAbilityCooldown(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const bool ForceCooldown, FGameplayTagContainer* OptionalRelevantTags)
+{
+	return Super::CommitAbilityCooldown(Handle, ActorInfo, ActivationInfo, ForceCooldown, OptionalRelevantTags);
 }

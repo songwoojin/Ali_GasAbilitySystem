@@ -3,6 +3,7 @@
 
 #include "NCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Nexus/GameplayAbilitySystem/AttributeSets/NBasicAttributeSets.h"
 
 // Sets default values
 ANCharacterBase::ANCharacterBase()
@@ -29,6 +30,8 @@ ANCharacterBase::ANCharacterBase()
 	GetCharacterMovement()->MinAnalogWalkSpeed=20.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking=2000.0f;
 	GetCharacterMovement()->BrakingDecelerationFalling=1500.0f;
+
+	BasicAttributeSets=CreateDefaultSubobject<UNBasicAttributeSets>("BasicAttributeSets");
 }
 
 // Called when the game starts or when spawned
