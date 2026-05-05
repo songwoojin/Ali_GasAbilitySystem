@@ -29,6 +29,8 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
+
+	//FGameplayAbilitySpecHandle DashAbilitySpecHandle;
 public:
 	ANPlayerCharacter();
 
@@ -39,4 +41,8 @@ protected:
 	void Input_Dash();
 	
 	void HandleStaminaChanged(const FOnAttributeChangeData& Data);
-};
+
+	//UFUNCTION(BlueprintCallable)
+	//FGameplayAbilitySpecHandle GetDashAbilitySpecHandle() const {return DashAbilitySpecHandle;};
+	
+};	

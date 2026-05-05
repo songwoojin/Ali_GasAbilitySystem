@@ -7,6 +7,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitAttributeChange.h"
 #include "Nexus/GameplayAbilitySystem/AttributeSets/NBasicAttributeSets.h"
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 ANPlayerCharacter::ANPlayerCharacter()
 	:DashAction(nullptr)
@@ -38,6 +39,16 @@ void ANPlayerCharacter::GiveAbility()
 	if (HasAuthority() && DashAbility)
 	{
 		ASC->GiveAbility(FGameplayAbilitySpec(DashAbility,1,0));
+
+		FGameplayEventData EventData;
+		// EventData.EventTag = TAG_Event_Abilities_Changed;
+		// EventData.Instigator = this;
+		// EventData.Target = this;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		TAG_Event_Abilities_Changed,
+		EventData
+	);
 	}
 }
 
