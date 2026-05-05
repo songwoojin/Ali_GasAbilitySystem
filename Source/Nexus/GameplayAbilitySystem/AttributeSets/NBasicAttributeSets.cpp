@@ -2,8 +2,8 @@
 
 
 #include "NBasicAttributeSets.h"
-
 #include "Net/UnrealNetwork.h"
+#include "GameplayEffectExtension.h"
 
 UNBasicAttributeSets::UNBasicAttributeSets()
 	:Health(100.0f)
@@ -21,6 +21,34 @@ void UNBasicAttributeSets::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, MaxStamina, COND_None, REPNOTIFY_Always);
+}
+
+void UNBasicAttributeSets::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute ==GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	}
+	else if (Attribute ==GetStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStamina());
+	}
+}
+
+void UNBasicAttributeSets::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute==GetHealthAttribute())
+	{
+		SetHealth(GetHealth());
+	}
+	else if (Data.EvaluatedData.Attribute==GetStaminaAttribute())
+	{
+		SetStamina(GetStamina());
+	}
 }
 
 void UNBasicAttributeSets::OnRep_Health(const FGameplayAttributeData& OldValue) const
