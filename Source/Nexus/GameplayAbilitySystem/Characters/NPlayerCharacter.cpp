@@ -8,10 +8,12 @@
 #include "Nexus/GameplayAbilitySystem/AttributeSets/NBasicAttributeSets.h"
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Nexus/Component/NWeaponsManagerComponent.h"
 
 ANPlayerCharacter::ANPlayerCharacter()
 	:DashAction(nullptr)
 {
+	WeaponsManager=CreateDefaultSubobject<UNWeaponsManagerComponent>("WeaponsManager");
 }
 
 void ANPlayerCharacter::BeginPlay()
@@ -31,24 +33,37 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EIC->BindAction(DashAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Dash);
+		
+		EIC->BindAction(EquipStaffAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipStaff);
+		//EIC->BindAction(EquipStaffAction, ETriggerEvent::Completed, this, &ANPlayerCharacter::Input_UnequipStaff);
+		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
 	}
 }
 
 void ANPlayerCharacter::GiveAbility()
 {
-	if (HasAuthority() && DashAbility)
+	if (HasAuthority())
 	{
-		ASC->GiveAbility(FGameplayAbilitySpec(DashAbility,1,0));
+		if (DashAbility)
+		{
+			ASC->GiveAbility(FGameplayAbilitySpec(DashAbility,1,0));
 
-		FGameplayEventData EventData;
-		// EventData.EventTag = TAG_Event_Abilities_Changed;
-		// EventData.Instigator = this;
-		// EventData.Target = this;
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-		this,
-		TAG_Event_Abilities_Changed,
-		EventData
-	);
+			FGameplayEventData EventData;
+			// EventData.EventTag = TAG_Event_Abilities_Changed;
+			// EventData.Instigator = this;
+			// EventData.Target = this;
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			this,
+			TAG_Event_Abilities_Changed,
+			EventData
+			);
+		}
+
+		if (EquipWeaponAbility)
+		{
+			ASC->GiveAbility(FGameplayAbilitySpec(EquipWeaponAbility,1,0));
+		}
+		
 	}
 }
 
@@ -59,6 +74,43 @@ void ANPlayerCharacter::Input_Dash()
 		ASC->TryActivateAbilityByClass(DashAbility);
 	}
 }
+
+void ANPlayerCharacter::Input_EquipStaff()
+{
+	FGameplayEventData Payload;
+
+	Payload.EventTag = TAG_Event_Weapon_Equipped;
+	Payload.Instigator = this;
+
+	Payload.TargetTags.AddTag(TAG_Weapon_Ranged_Staff);
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		Payload.EventTag,
+		Payload
+	);
+}
+
+void ANPlayerCharacter::Input_EquipAxe()
+{
+	FGameplayEventData Payload;
+
+	Payload.EventTag = TAG_Event_Weapon_Equipped;
+	Payload.Instigator = this;
+
+	Payload.TargetTags.AddTag(TAG_Weapon_Melee_Axe);
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		Payload.EventTag,
+		Payload
+	);
+}
+
+// void ANPlayerCharacter::Input_UnequipStaff()
+// {
+// 	WeaponsManager->UnEquipWeapon();
+// }
 
 void ANPlayerCharacter::HandleStaminaChanged(const FOnAttributeChangeData& Data)
 {

@@ -7,10 +7,11 @@
 #include "GameplayEffect.h"
 #include "NPlayerCharacter.generated.h"
 
+class ANWeapon_Base;
 class UGameplayAbility;
 class UGameplayEffect;
 class UInputAction;
-
+class UNWeaponsManagerComponent;
 
 /**
  * 
@@ -23,14 +24,32 @@ class NEXUS_API ANPlayerCharacter : public ANCharacterBase
 protected:
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* DashAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* EquipStaffAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* EquipAxeAction;
 	
 	UPROPERTY(EditAnywhere,Category="Ability")
 	TSubclassOf<UGameplayAbility> DashAbility;
+
+	UPROPERTY(EditAnywhere,Category="Ability")
+	TSubclassOf<UGameplayAbility> EquipWeaponAbility;
 
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
 	//FGameplayAbilitySpecHandle DashAbilitySpecHandle;
+
+	UPROPERTY(VisibleAnywhere)
+	UNWeaponsManagerComponent* WeaponsManager;
+
+	UPROPERTY(EditAnywhere,Category="Weapon")
+	TSubclassOf<ANWeapon_Base> StaffWeaponClass;
+
+	UPROPERTY(EditAnywhere,Category="Weapon")
+	TSubclassOf<ANWeapon_Base> AxeWeaponClass;
 public:
 	ANPlayerCharacter();
 
@@ -39,6 +58,10 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void GiveAbility();
 	void Input_Dash();
+	void Input_EquipStaff();
+	//void Input_UnequipStaff();
+	void Input_EquipAxe();
+	//void Input_Dash();
 	
 	void HandleStaminaChanged(const FOnAttributeChangeData& Data);
 
