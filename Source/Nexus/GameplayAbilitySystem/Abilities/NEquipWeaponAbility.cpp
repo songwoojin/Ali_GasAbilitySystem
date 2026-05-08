@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Nexus/GameplayAbilitySystem/Weapon/NEquipWeapon.h"
+#include "NEquipWeaponAbility.h"
 #include "Nexus/Component/NWeaponsManagerComponent.h"
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
 
-UNEquipWeapon::UNEquipWeapon()
+UNEquipWeaponAbility::UNEquipWeaponAbility()
 {
 }
 
-void UNEquipWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+void UNEquipWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                     const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

@@ -25,13 +25,20 @@ void UNDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	CommitAbilityCost(Handle, ActorInfo, ActivationInfo);
+
+	const FHitResult* Hit = TriggerEventData->TargetData.Get(0)->GetHitResult();
+	FVector HitLocation = Hit->Location;
+	if (HitLocation==FVector::ZeroVector)
+	{
+		HitLocation+=GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	}
 	
 	//UE_LOG(LogTemp, Warning, TEXT("Active Dash Ability"));
 	UAbilityTask_ApplyRootMotionConstantForce* Task =
 		UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
 			this,
 			NAME_None,
-			GetDashDirection(),
+			HitLocation,
 			Strength,     // Strength
 			Duration,       // Duration
 			false,      // bIsAdditive
@@ -70,27 +77,29 @@ void UNDashAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 	{
 		ASC->RemoveGameplayCue(TAG_GameplayCue_Dash_Active);
 	}
+
+	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, nullptr);
 	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-FVector UNDashAbility::GetDashDirection()
-{
-	APawn* Pawn=Cast<APawn>(GetAvatarActorFromActorInfo());
-	if (!Pawn)
-	{
-		return GetAvatarActorFromActorInfo()->GetActorForwardVector();
-	}
-	
-	if (Pawn->GetLastMovementInputVector().IsZero())
-	{
-		return GetAvatarActorFromActorInfo()->GetActorForwardVector();
-	}
-	else
-	{
-		return Pawn->GetLastMovementInputVector().GetSafeNormal();
-	}
-}
+// FVector UNDashAbility::GetDashDirection()
+// {
+// 	APawn* Pawn=Cast<APawn>(GetAvatarActorFromActorInfo());
+// 	if (!Pawn)
+// 	{
+// 		return GetAvatarActorFromActorInfo()->GetActorForwardVector();
+// 	}
+// 	
+// 	if (Pawn->GetLastMovementInputVector().IsZero())
+// 	{
+// 		return GetAvatarActorFromActorInfo()->GetActorForwardVector();
+// 	}
+// 	else
+// 	{
+// 		return Pawn->GetLastMovementInputVector().GetSafeNormal();
+// 	}
+// }
 
 float UNDashAbility::GetMaxSpeed()
 {
@@ -105,7 +114,7 @@ float UNDashAbility::GetMaxSpeed()
 
 void UNDashAbility::OnDashFinished()
 {
-	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, nullptr);
+	//CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, nullptr);
 	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

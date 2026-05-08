@@ -6,10 +6,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
 #include "NiagaraFunctionLibrary.h"
-#include "NiagaraSystem.h"
+#include "GameFramework/Character.h"
 
 UGC_Dash::UGC_Dash()
-	:Character(nullptr)
+	//:Character(nullptr)
 {
 	
 }
@@ -21,7 +21,7 @@ void UGC_Dash::HandleGameplayCue(AActor* MyTarget, EGameplayCueEvent::Type Event
 
 	UE_LOG(LogTemp, Log, TEXT("UGC_Dash::HandleGameplayCue"));
 
-	Character= Cast<ACharacter>(MyTarget);
+	//Character= Cast<ACharacter>(MyTarget);
 
 	if (EventType==EGameplayCueEvent::Executed)
 	{
@@ -70,7 +70,8 @@ bool UGC_Dash::OnActive_Implementation(AActor* MyTarget, const FGameplayCueParam
 	 TeleportStartSound,
 	 MyTarget->GetActorLocation()
 	 );
-	
+
+	 ACharacter* Character = Cast<ACharacter>(MyTarget);
 	 if (IsValid(Character))
 	 {
 	 	Character->GetMesh()->SetVisibility(false,true);	
@@ -104,6 +105,7 @@ bool UGC_Dash::OnRemove_Implementation(AActor* MyTarget, const FGameplayCueParam
 	MyTarget->GetActorLocation()
 	);
 
+	ACharacter* Character = Cast<ACharacter>(MyTarget);
 	if (IsValid(Character))
 	{
 		Character->GetMesh()->SetVisibility(true,true);	

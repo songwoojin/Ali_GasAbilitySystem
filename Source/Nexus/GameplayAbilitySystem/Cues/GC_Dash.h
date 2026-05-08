@@ -20,8 +20,8 @@ class NEXUS_API UGC_Dash : public UGameplayCueNotify_Static
 public:
 	UGC_Dash();
 protected:
-	UPROPERTY()
-	ACharacter* Character;
+	//UPROPERTY()
+	//ACharacter* Character;
 
 	UPROPERTY(EditAnywhere,Category="Particles")
 	UNiagaraSystem* DashStartNiagara;

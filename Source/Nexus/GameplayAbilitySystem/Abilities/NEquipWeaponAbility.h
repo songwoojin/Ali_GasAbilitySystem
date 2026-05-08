@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "NEquipWeapon.generated.h"
+#include "NEquipWeaponAbility.generated.h"
 
 class ANWeapon_Base;
 
@@ -12,11 +12,11 @@ class ANWeapon_Base;
  * 
  */
 UCLASS()
-class NEXUS_API UNEquipWeapon : public UGameplayAbility
+class NEXUS_API UNEquipWeaponAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 public:
-	UNEquipWeapon();
+	UNEquipWeaponAbility();
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 

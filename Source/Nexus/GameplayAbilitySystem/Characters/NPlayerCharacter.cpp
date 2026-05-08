@@ -69,17 +69,30 @@ void ANPlayerCharacter::GiveAbility()
 
 void ANPlayerCharacter::Input_Dash()
 {
-	if (ASC)
-	{
-		ASC->TryActivateAbilityByClass(DashAbility);
-	}
+	// if (ASC)
+	// {
+	// 	ASC->TryActivateAbilityByClass(DashAbility);
+	// }
+
+	FHitResult Hit;
+	Hit.Location = GetLastMovementInputVector().GetSafeNormal();
+	
+	FGameplayEventData Payload;
+	Payload.EventTag = TAG_Event_ActivateAbility_Dash;
+	Payload.TargetData.Add(new FGameplayAbilityTargetData_SingleTargetHit(Hit));
+	
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		Payload.EventTag,
+		Payload
+	);
 }
 
 void ANPlayerCharacter::Input_EquipStaff()
 {
 	FGameplayEventData Payload;
 
-	Payload.EventTag = TAG_Event_Weapon_Equipped;
+	Payload.EventTag = TAG_Event_ActivateAbility_EquipWeapon;
 	Payload.Instigator = this;
 
 	Payload.TargetTags.AddTag(TAG_Weapon_Ranged_Staff);
@@ -95,7 +108,7 @@ void ANPlayerCharacter::Input_EquipAxe()
 {
 	FGameplayEventData Payload;
 
-	Payload.EventTag = TAG_Event_Weapon_Equipped;
+	Payload.EventTag = TAG_Event_ActivateAbility_EquipWeapon;
 	Payload.Instigator = this;
 
 	Payload.TargetTags.AddTag(TAG_Weapon_Melee_Axe);

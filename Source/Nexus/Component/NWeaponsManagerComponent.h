@@ -21,7 +21,7 @@ public:
 	void UnEquipWeapon();
 	
 protected:
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing=OnRep_EquippedWeapon)
 	TObjectPtr<ANWeapon_Base> EquippedWeapon;
 
 	UPROPERTY()
@@ -32,6 +32,13 @@ protected:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	void SetEquippedWeaponProperties();
+	void SetUnarmedWeaponProperties();
+	
+	UFUNCTION()
+	void OnRep_EquippedWeapon();
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
