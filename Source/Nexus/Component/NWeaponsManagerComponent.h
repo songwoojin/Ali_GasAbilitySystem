@@ -8,6 +8,8 @@
 #include "NWeaponsManagerComponent.generated.h"
 
 
+struct FGameplayAbilitySpecHandle;
+class ANCharacterBase;
 class ANWeapon_Base;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -25,10 +27,13 @@ protected:
 	TObjectPtr<ANWeapon_Base> EquippedWeapon;
 
 	UPROPERTY()
-	ACharacter* OwningCharacter;
+	ANCharacterBase* OwningCharacter;
 
 	UPROPERTY(EditAnywhere,Category="Weapon")
 	FWeaponConfig UnarmedWeaponConfig;
+
+	UPROPERTY()
+	TArray<FGameplayAbilitySpecHandle> AbilitesGrantedByWeapon;
 	
 protected:
 	virtual void BeginPlay() override;

@@ -4,6 +4,9 @@
 #include "NCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Nexus/GameplayAbilitySystem/AttributeSets/NBasicAttributeSets.h"
+#include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
 
 // Sets default values
 ANCharacterBase::ANCharacterBase()
@@ -13,7 +16,7 @@ ANCharacterBase::ANCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ASC=CreateDefaultSubobject<UAbilitySystemComponent>("ASC");
+	ASC=CreateDefaultSubobject<UNAbilitySystemComponent>("ASC");
 	ASC->SetIsReplicated(true);
 	ASC->SetReplicationMode(ASCReplicationMode);
 
@@ -48,7 +51,61 @@ void ANCharacterBase::PossessedBy(AController* NewController)
 	if (ASC)
 	{
 		ASC->InitAbilityActorInfo(this,this);
+		GrantAbilities(StartingAbilities);
 	}
+}
+
+TArray<FGameplayAbilitySpecHandle> ANCharacterBase::GrantAbilities(
+	TArray<TSubclassOf<UGameplayAbility>> AbilitiesToGrant)
+{
+	if (!ASC || !HasAuthority())
+	{
+		return TArray<FGameplayAbilitySpecHandle>();
+	}
+
+	TArray<FGameplayAbilitySpecHandle> AbilitiesHandles;
+
+	for (TSubclassOf<UGameplayAbility> AbilityClass : AbilitiesToGrant)
+	{
+		if (AbilityClass)
+		{
+			FGameplayAbilitySpecHandle SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(AbilityClass,1,-1,this));
+			AbilitiesHandles.Add(SpecHandle);
+		}
+	}
+
+	SendAbilitiesChangedEvent();
+
+	return AbilitiesHandles;
+}
+
+void ANCharacterBase::RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove)
+{
+	if (!ASC || !HasAuthority())
+	{
+		return;
+	}
+
+	for (FGameplayAbilitySpecHandle AbilityHandle : AbilityHandlesToRemove)
+	{
+		ASC->ClearAbility(AbilityHandle);
+	}
+
+	SendAbilitiesChangedEvent();
+}
+
+void ANCharacterBase::SendAbilitiesChangedEvent()
+{
+	FGameplayEventData EventData;
+	EventData.EventTag = TAG_Event_Abilities_Changed;
+	EventData.Instigator = this;
+	EventData.Target = this;
+	
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+	this,
+	EventData.EventTag,
+	EventData
+	);
 }
 
 void ANCharacterBase::OnRep_PlayerState()

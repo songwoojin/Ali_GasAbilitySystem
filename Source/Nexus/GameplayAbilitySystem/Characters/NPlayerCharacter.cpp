@@ -9,6 +9,7 @@
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Nexus/Component/NWeaponsManagerComponent.h"
+#include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
 
 ANPlayerCharacter::ANPlayerCharacter()
 	:DashAction(nullptr)
@@ -19,8 +20,6 @@ ANPlayerCharacter::ANPlayerCharacter()
 void ANPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	GiveAbility();
 
 	ASC->GetGameplayAttributeValueChangeDelegate(UNBasicAttributeSets::GetStaminaAttribute()).AddUObject(
 		this, &ThisClass::HandleStaminaChanged);
@@ -37,33 +36,6 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EIC->BindAction(EquipStaffAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipStaff);
 		//EIC->BindAction(EquipStaffAction, ETriggerEvent::Completed, this, &ANPlayerCharacter::Input_UnequipStaff);
 		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
-	}
-}
-
-void ANPlayerCharacter::GiveAbility()
-{
-	if (HasAuthority())
-	{
-		if (DashAbility)
-		{
-			ASC->GiveAbility(FGameplayAbilitySpec(DashAbility,1,0));
-
-			FGameplayEventData EventData;
-			// EventData.EventTag = TAG_Event_Abilities_Changed;
-			// EventData.Instigator = this;
-			// EventData.Target = this;
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-			this,
-			TAG_Event_Abilities_Changed,
-			EventData
-			);
-		}
-
-		if (EquipWeaponAbility)
-		{
-			ASC->GiveAbility(FGameplayAbilitySpec(EquipWeaponAbility,1,0));
-		}
-		
 	}
 }
 

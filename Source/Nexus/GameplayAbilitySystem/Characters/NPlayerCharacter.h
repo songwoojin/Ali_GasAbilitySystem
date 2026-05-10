@@ -30,12 +30,6 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* EquipAxeAction;
-	
-	UPROPERTY(EditAnywhere,Category="Ability")
-	TSubclassOf<UGameplayAbility> DashAbility;
-
-	UPROPERTY(EditAnywhere,Category="Ability")
-	TSubclassOf<UGameplayAbility> EquipWeaponAbility;
 
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
@@ -56,7 +50,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	void GiveAbility();
+	
 	void Input_Dash();
 	void Input_EquipStaff();
 	//void Input_UnequipStaff();

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
 #include "NDashAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class NEXUS_API UNDashAbility : public UGameplayAbility
+class NEXUS_API UNDashAbility : public UNGameplayAbilty
 {
 	GENERATED_BODY()
 public:

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
 #include "NEquipWeaponAbility.generated.h"
 
 class ANWeapon_Base;
@@ -12,7 +12,7 @@ class ANWeapon_Base;
  * 
  */
 UCLASS()
-class NEXUS_API UNEquipWeaponAbility : public UGameplayAbility
+class NEXUS_API UNEquipWeaponAbility : public UNGameplayAbilty
 {
 	GENERATED_BODY()
 public:

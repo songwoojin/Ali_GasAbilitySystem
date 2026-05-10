@@ -3,7 +3,7 @@
 
 #include "Nexus/Component/NWeaponsManagerComponent.h"
 #include "Nexus/GameplayAbilitySystem/Weapon/NWeapon_Base.h"
-#include "GameFramework/Character.h"
+#include "Nexus/GameplayAbilitySystem/Characters/NCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 
@@ -18,7 +18,7 @@ void UNWeaponsManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OwningCharacter= Cast<ACharacter>(GetOwner());
+	OwningCharacter= Cast<ANCharacterBase>(GetOwner());
 }
 
 void UNWeaponsManagerComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -90,9 +90,9 @@ void UNWeaponsManagerComponent::EquipWeapon(const TSubclassOf<ANWeapon_Base>& Eq
 	{
 		FName SocketName = EquippedWeapon->GetWeaponConfig().EquippedSocketName;
 		EquippedWeapon->AttachToComponent(OwningCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,SocketName);
+		AbilitesGrantedByWeapon = OwningCharacter->GrantAbilities(EquippedWeapon->GetWeaponConfig().AbilitiesToGrant);
+		OnRep_EquippedWeapon();
 	}
-
-	OnRep_EquippedWeapon();
 }
 
 void UNWeaponsManagerComponent::UnEquipWeapon()
@@ -101,6 +101,8 @@ void UNWeaponsManagerComponent::UnEquipWeapon()
 
 	EquippedWeapon->Destroy();
 	EquippedWeapon=nullptr;
+	OwningCharacter->RemoveAbilities(AbilitesGrantedByWeapon);
+	AbilitesGrantedByWeapon.Empty();
 	
 	OnRep_EquippedWeapon();
 }

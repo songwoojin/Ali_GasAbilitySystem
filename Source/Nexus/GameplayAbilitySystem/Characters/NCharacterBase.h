@@ -9,6 +9,7 @@
 #include "NCharacterBase.generated.h"
 
 class UNBasicAttributeSets;
+class UNAbilitySystemComponent;
 
 UCLASS()
 class NEXUS_API ANCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -21,18 +22,23 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem")
-	UAbilitySystemComponent* ASC;
+	UNAbilitySystemComponent* ASC;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem")
 	UNBasicAttributeSets* BasicAttributeSets;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="AbilitySystem")
 	EGameplayEffectReplicationMode ASCReplicationMode;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="AbilitySystem")
+	TArray<TSubclassOf<UGameplayAbility>> StartingAbilities;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
+	
+	
 	virtual void OnRep_PlayerState() override;
 
 public:	
@@ -44,5 +50,8 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	TArray<FGameplayAbilitySpecHandle> GrantAbilities(TArray<TSubclassOf<UGameplayAbility>> AbilitiesToGrant);
+	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove);
 
+	void SendAbilitiesChangedEvent();
 };
