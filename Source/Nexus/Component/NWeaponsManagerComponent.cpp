@@ -78,6 +78,7 @@ void UNWeaponsManagerComponent::EquipWeapon(const TSubclassOf<ANWeapon_Base>& Eq
 	}
 	
 	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator= OwningCharacter;
 
 	EquippedWeapon = GetWorld()->SpawnActor<ANWeapon_Base>(
 		EquippedWeaponClass,

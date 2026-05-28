@@ -12,3 +12,7 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_Weapon_Ranged_Staff, "Weapon.Ranged.Staff");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Weapon_Melee_Axe, "Weapon.Melee.Axe");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ActivateAbility_Dash, "Event.ActivateAbility.Dash");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ActivateAbility_EquipWeapon, "Event.ActivateAbility.EquipWeapon");
+UE_DEFINE_GAMEPLAY_TAG(TAG_GameplayAbility_MeleeAttack_AxeSwing, "GameplayAbility.MeleeAttack.AxeSwing");
+UE_DEFINE_GAMEPLAY_TAG(TAG_Event_HitScan_Start, "Event.HitScan.Start");
+UE_DEFINE_GAMEPLAY_TAG(TAG_Event_HitScan_End, "Event.HitScan.End");
+UE_DEFINE_GAMEPLAY_TAG(TAG_Data_Damage, "Data.Damage");

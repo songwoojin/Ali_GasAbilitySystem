@@ -36,6 +36,7 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EIC->BindAction(EquipStaffAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipStaff);
 		//EIC->BindAction(EquipStaffAction, ETriggerEvent::Completed, this, &ANPlayerCharacter::Input_UnequipStaff);
 		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
+		EIC->BindAction(MeleeAttackAxeSwingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeSwing);
 	}
 }
 
@@ -90,6 +91,14 @@ void ANPlayerCharacter::Input_EquipAxe()
 		Payload.EventTag,
 		Payload
 	);
+}
+
+void ANPlayerCharacter::Input_MeleeAttackAxeSwing()
+{
+	if (ASC)
+	{
+		ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(TAG_GameplayAbility_MeleeAttack_AxeSwing), true);
+	}
 }
 
 // void ANPlayerCharacter::Input_UnequipStaff()

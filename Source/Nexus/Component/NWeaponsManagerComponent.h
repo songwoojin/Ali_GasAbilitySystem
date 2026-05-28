@@ -21,6 +21,7 @@ public:
 	UNWeaponsManagerComponent();
 	void EquipWeapon(const TSubclassOf<ANWeapon_Base>& EquippedWeaponClass);
 	void UnEquipWeapon();
+	ANWeapon_Base* GetEquippedWeapon() const {return EquippedWeapon;};
 	
 protected:
 	UPROPERTY(ReplicatedUsing=OnRep_EquippedWeapon)

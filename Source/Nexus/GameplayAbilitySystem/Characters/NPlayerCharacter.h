@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* EquipAxeAction;
 
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* MeleeAttackAxeSwingAction;
+
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
@@ -56,6 +59,7 @@ protected:
 	//void Input_UnequipStaff();
 	void Input_EquipAxe();
 	//void Input_Dash();
+	void Input_MeleeAttackAxeSwing();
 	
 	void HandleStaminaChanged(const FOnAttributeChangeData& Data);
 
