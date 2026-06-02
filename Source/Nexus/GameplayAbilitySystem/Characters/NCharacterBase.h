@@ -54,4 +54,7 @@ public:
 	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove);
 
 	void SendAbilitiesChangedEvent();
+
+	UFUNCTION(Server,Reliable)
+	void ServerSendGameplayEventToSelf(const FGameplayEventData& Payload);
 };

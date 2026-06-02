@@ -108,6 +108,15 @@ void ANCharacterBase::SendAbilitiesChangedEvent()
 	);
 }
 
+void ANCharacterBase::ServerSendGameplayEventToSelf_Implementation(const FGameplayEventData& Payload)
+{
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		Payload.EventTag,
+		Payload
+	);
+}
+
 void ANCharacterBase::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();

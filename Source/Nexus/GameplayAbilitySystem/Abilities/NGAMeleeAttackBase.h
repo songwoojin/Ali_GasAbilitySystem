@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
-#include "NGAMeleeAttackAxeSwing.generated.h"
+#include "NGAMeleeAttackBase.generated.h"
 
 class ANWeapon_Base;
 /**
  * 
  */
 UCLASS()
-class NEXUS_API UNGAMeleeAttackAxeSwing : public UNGameplayAbilty
+class NEXUS_API UNGAMeleeAttackBase : public UNGameplayAbilty
 {
 	GENERATED_BODY()
 
 public:
-	UNGAMeleeAttackAxeSwing();
+	UNGAMeleeAttackBase();
 
 protected:
 	UPROPERTY(EditAnywhere,Category="Ability")
@@ -27,18 +27,26 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	float DamageMagnitude;
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	virtual void MontageStart();
+	
 	UFUNCTION()
 	void OnMontageCompleted();
 
 	UFUNCTION()
-	void OnHitScanStartEventReceived(FGameplayEventData Payload);
+	virtual void OnHitScanStartEventReceived(FGameplayEventData Payload);
 
 	UFUNCTION()
 	void OnHitScanEndEventReceived(FGameplayEventData Payload);
+
+	void HandleHitScanStart();
+	void HandleHitScanEnd();
 	
 };

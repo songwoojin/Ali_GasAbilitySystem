@@ -37,6 +37,7 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		//EIC->BindAction(EquipStaffAction, ETriggerEvent::Completed, this, &ANPlayerCharacter::Input_UnequipStaff);
 		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
 		EIC->BindAction(MeleeAttackAxeSwingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeSwing);
+		EIC->BindAction(MeleeAttackAxeComboAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeCombo);
 	}
 }
 
@@ -132,3 +133,26 @@ void ANPlayerCharacter::HandleStaminaChanged(const FOnAttributeChangeData& Data)
 		}
 	}
 }
+
+void ANPlayerCharacter::Input_MeleeAttackAxeCombo()
+{
+	if (ASC)
+	{
+		ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(TAG_GameplayAbility_MeleeAttack_AxeCombo), true);
+
+		FGameplayEventData Payload;
+		Payload.EventTag = TAG_Event_ContinueCombo_Input;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			this,
+			Payload.EventTag,
+			Payload
+		);
+
+		if (!HasAuthority())
+		{
+			ServerSendGameplayEventToSelf(Payload);
+		}
+	}
+}
+
