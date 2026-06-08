@@ -24,6 +24,9 @@ ANWeapon_Base::ANWeapon_Base()
 
 	TraceEnd=CreateDefaultSubobject<USceneComponent>(TEXT("TraceEnd"));
 	TraceEnd->SetupAttachment(RootComponent);
+
+	ProjectileSpawnPoint=CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawnPoint"));
+	ProjectileSpawnPoint->SetupAttachment(RootComponent);
 	
 	bReplicates=true;
 

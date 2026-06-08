@@ -38,6 +38,7 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
 		EIC->BindAction(MeleeAttackAxeSwingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeSwing);
 		EIC->BindAction(MeleeAttackAxeComboAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeCombo);
+		EIC->BindAction(ShootProjectile, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_ShootProjectile);
 	}
 }
 
@@ -76,6 +77,14 @@ void ANPlayerCharacter::Input_EquipStaff()
 		Payload.EventTag,
 		Payload
 	);
+	if (HasAuthority())
+	{
+	}
+	else
+	{
+		//ServerSendGameplayEventToSelf(Payload);
+	}
+
 }
 
 void ANPlayerCharacter::Input_EquipAxe()
@@ -92,6 +101,14 @@ void ANPlayerCharacter::Input_EquipAxe()
 		Payload.EventTag,
 		Payload
 	);
+	if (HasAuthority())
+	{
+	}
+	else
+	{
+		//ServerSendGameplayEventToSelf(Payload);
+	}
+	
 }
 
 void ANPlayerCharacter::Input_MeleeAttackAxeSwing()
@@ -153,6 +170,14 @@ void ANPlayerCharacter::Input_MeleeAttackAxeCombo()
 		{
 			ServerSendGameplayEventToSelf(Payload);
 		}
+	}
+}
+
+void ANPlayerCharacter::Input_ShootProjectile()
+{
+	if (ASC)
+	{
+		ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(TAG_GameplayAbility_ShootProjectile), true);
 	}
 }
 

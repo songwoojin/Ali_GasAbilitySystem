@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Weapon")
 	USceneComponent* TraceEnd;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Weapon")
+	USceneComponent* ProjectileSpawnPoint;
+
 	UPROPERTY(EditAnywhere,Category="HitScan",meta=(AllowPrivateAccess=true))
 	float HitScanRadius;
 
@@ -49,6 +52,7 @@ public:
 
 	void HitScanStart(FGameplayEffectSpecHandle HitScanEffectSpecHandle);
 	void HitScanEnd();
+	FVector GetSpawnPointLocation() const {return ProjectileSpawnPoint->GetComponentLocation();}
 protected:
 	virtual void BeginPlay() override;
 

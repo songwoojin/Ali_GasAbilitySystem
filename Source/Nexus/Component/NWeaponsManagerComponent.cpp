@@ -31,6 +31,9 @@ void UNWeaponsManagerComponent::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 void UNWeaponsManagerComponent::SetEquippedWeaponProperties()
 {
 	if (!IsValid(EquippedWeapon))	return;
+
+	//Test
+	const FWeaponConfig& Config = EquippedWeapon->GetWeaponConfig();
 	
 	OwningCharacter->GetMesh()->SetAnimInstanceClass(EquippedWeapon->GetWeaponConfig().AnimClass);
 	OwningCharacter->GetCharacterMovement()->MaxWalkSpeed=EquippedWeapon->GetWeaponConfig().MovementProperties.MaxWalkSpeed;
@@ -48,6 +51,10 @@ void UNWeaponsManagerComponent::SetUnarmedWeaponProperties()
 
 void UNWeaponsManagerComponent::OnRep_EquippedWeapon()
 {
+	UE_LOG(LogTemp, Warning, TEXT("OnRep_EquippedWeapon / Owner: %s / Weapon: %s"),
+		*GetNameSafe(GetOwner()),
+		*GetNameSafe(EquippedWeapon));
+	
 	if (IsValid(EquippedWeapon))
 	{
 		SetEquippedWeaponProperties();
@@ -78,6 +85,7 @@ void UNWeaponsManagerComponent::EquipWeapon(const TSubclassOf<ANWeapon_Base>& Eq
 	}
 	
 	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = OwningCharacter;
 	SpawnParams.Instigator= OwningCharacter;
 
 	EquippedWeapon = GetWorld()->SpawnActor<ANWeapon_Base>(

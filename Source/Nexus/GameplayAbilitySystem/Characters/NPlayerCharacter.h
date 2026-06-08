@@ -37,6 +37,9 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* MeleeAttackAxeComboAction;
 
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* ShootProjectile;
+
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
@@ -70,5 +73,6 @@ protected:
 	//FGameplayAbilitySpecHandle GetDashAbilitySpecHandle() const {return DashAbilitySpecHandle;};
 
 	void Input_MeleeAttackAxeCombo();
+	void Input_ShootProjectile();
 	
 };	
