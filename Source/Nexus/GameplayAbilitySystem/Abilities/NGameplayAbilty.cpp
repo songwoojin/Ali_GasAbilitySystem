@@ -3,3 +3,7 @@
 
 #include "NGameplayAbilty.h"
 
+UNGameplayAbilty::UNGameplayAbilty()
+{
+	ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("GameplayAbility.Active")));
+}

@@ -15,6 +15,8 @@ class NEXUS_API UNGameplayAbilty : public UGameplayAbility
 	GENERATED_BODY()
 	
 public:
+	UNGameplayAbilty();
+	
 	UFUNCTION(BlueprintCallable,Category="Ability")
 	bool GetShouldShowInAbilitiesBar() const {return bShouldShowInAbilitiesBar;};
 	
