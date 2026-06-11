@@ -38,7 +38,13 @@ protected:
 	UInputAction* MeleeAttackAxeComboAction;
 
 	UPROPERTY(EditAnywhere,Category="Input")
-	UInputAction* ShootProjectile;
+	UInputAction* ShootProjectileAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* AOEAttackTargettingAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* AOEAttackTargetConfirmAction;
 
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
@@ -74,5 +80,7 @@ protected:
 
 	void Input_MeleeAttackAxeCombo();
 	void Input_ShootProjectile();
+	void Input_AOEAttackTargeting();
+	void Input_AOEAttackTargetConfirm();
 	
 };	

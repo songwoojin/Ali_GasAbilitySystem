@@ -15,6 +15,7 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ActivateAbility_Dash, "Event.ActivateAbility.Da
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ActivateAbility_EquipWeapon, "Event.ActivateAbility.EquipWeapon");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameplayAbility_MeleeAttack_AxeSwing, "GameplayAbility.MeleeAttack.AxeSwing");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameplayAbility_MeleeAttack_AxeCombo, "GameplayAbility.MeleeAttack.AxeCombo");
+UE_DEFINE_GAMEPLAY_TAG(TAG_GameplayAbility_AOEAttack, "GameplayAbility.AOEAttack");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameplayAbility_ShootProjectile, "GameplayAbility.ShootProjectile");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_HitScan_Start, "Event.HitScan.Start");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ContinueCombo_Start, "Event.ContinueCombo.Start");
@@ -22,4 +23,5 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_Event_HitScan_End, "Event.HitScan.End");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ContinueCombo_End, "Event.ContinueCombo.End");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ContinueCombo_Input, "Event.ContinueCombo.Input");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Event_ShootProjectile, "Event.ShootProjectile");
+UE_DEFINE_GAMEPLAY_TAG(TAG_Event_Montage_Trigger, "Event.Montage.Trigger");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Data_Damage, "Data.Damage");
