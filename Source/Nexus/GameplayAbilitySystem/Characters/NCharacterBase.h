@@ -37,9 +37,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
-	
-	
 	virtual void OnRep_PlayerState() override;
+	virtual void OnDeadTagChanged(const FGameplayTag CallbackTag,int32 NewCount);
+	virtual void HandleDeath();
 
 public:	
 	// Called every frame

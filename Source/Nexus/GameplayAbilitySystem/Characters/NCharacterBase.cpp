@@ -7,6 +7,7 @@
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ANCharacterBase::ANCharacterBase()
@@ -35,13 +36,19 @@ ANCharacterBase::ANCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationFalling=1500.0f;
 
 	BasicAttributeSets=CreateDefaultSubobject<UNBasicAttributeSets>("BasicAttributeSets");
+	
 }
 
 // Called when the game starts or when spawned
 void ANCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (ASC)
+	{
+		ASC->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag("State.Dead")).
+		AddUObject(this,&ANCharacterBase::OnDeadTagChanged);
+	}
 }
 
 void ANCharacterBase::PossessedBy(AController* NewController)
@@ -125,6 +132,28 @@ void ANCharacterBase::OnRep_PlayerState()
 	{
 		ASC->InitAbilityActorInfo(this,this);
 	}
+}
+
+void ANCharacterBase::OnDeadTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Dead Tag Changed: %d"), NewCount);
+	
+	if (NewCount>0)
+	{
+		HandleDeath();
+	}
+}
+
+void ANCharacterBase::HandleDeath()
+{
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	FVector Impulse = GetActorForwardVector()* -10000;
+	Impulse.Z=15000;
+	GetMesh()->AddImpulseAtLocation(Impulse,GetActorLocation());
 }
 
 // Called every frame

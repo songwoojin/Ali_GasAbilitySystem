@@ -188,10 +188,14 @@ void ANPlayerCharacter::Input_AOEAttackTargeting()
 		FGameplayTagContainer AOEAbilityTags;
 		AOEAbilityTags.AddTag(TAG_GameplayAbility_AOEAttack);
 		ASC->CancelAbilities(&AOEAbilityTags);
-		return;
+
+		ASC->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
+	}
+	else
+	{
+		ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(TAG_GameplayAbility_AOEAttack), true);
 	}
 
-	ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(TAG_GameplayAbility_AOEAttack), true);
 }
 
 void ANPlayerCharacter::Input_AOEAttackTargetConfirm()
