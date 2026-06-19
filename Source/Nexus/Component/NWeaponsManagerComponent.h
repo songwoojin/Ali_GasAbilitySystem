@@ -22,9 +22,11 @@ public:
 	void EquipWeapon(const TSubclassOf<ANWeapon_Base>& EquippedWeaponClass);
 	void UnEquipWeapon();
 	ANWeapon_Base* GetEquippedWeapon() const {return EquippedWeapon;};
+	UFUNCTION(NetMulticast, Reliable)
+	void ApplyWeaponState();
 	
 protected:
-	UPROPERTY(ReplicatedUsing=OnRep_EquippedWeapon)
+	UPROPERTY(Replicated)
 	TObjectPtr<ANWeapon_Base> EquippedWeapon;
 
 	UPROPERTY()
@@ -35,19 +37,22 @@ protected:
 
 	UPROPERTY()
 	TArray<FGameplayAbilitySpecHandle> AbilitesGrantedByWeapon;
+
+	UPROPERTY(EditAnywhere,Category="StartingWeapon")
+	TArray<TSubclassOf<ANWeapon_Base>> StartingWeaponClasses;
+
+	UPROPERTY()
+	TArray<TObjectPtr<ANWeapon_Base>> StartingWeapons;
 	
 protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
+
 	void SetEquippedWeaponProperties();
 	void SetUnarmedWeaponProperties();
 	
-	UFUNCTION()
-	void OnRep_EquippedWeapon();
-
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	void CreateStartingWeapons();
+	void AttachWeapon(const TSubclassOf<ANWeapon_Base>& WeaponToAttach);
+	void DetachWeapon();
+	
 };

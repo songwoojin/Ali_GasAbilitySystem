@@ -54,11 +54,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UNWeaponsManagerComponent* WeaponsManager;
 
-	UPROPERTY(EditAnywhere,Category="Weapon")
-	TSubclassOf<ANWeapon_Base> StaffWeaponClass;
-
-	UPROPERTY(EditAnywhere,Category="Weapon")
-	TSubclassOf<ANWeapon_Base> AxeWeaponClass;
 public:
 	ANPlayerCharacter();
 

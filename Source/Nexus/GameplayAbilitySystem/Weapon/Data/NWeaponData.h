@@ -24,4 +24,7 @@ struct FWeaponConfig
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FNMovementProperties MovementProperties;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName StowedSocketName=FName("None");
 };
