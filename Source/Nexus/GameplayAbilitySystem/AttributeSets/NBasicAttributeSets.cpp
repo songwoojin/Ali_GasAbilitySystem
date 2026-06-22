@@ -45,7 +45,8 @@ void UNBasicAttributeSets::PostGameplayEffectExecute(const struct FGameplayEffec
 	{
 		SetHealth(GetHealth());
 
-		if (Data.EffectSpec.Def->GetAssetTags().HasTag(FGameplayTag::RequestGameplayTag("Effects.HitReaction")))
+		if (Data.EffectSpec.Def->GetAssetTags().HasTag(FGameplayTag::RequestGameplayTag("Effects.HitReaction"))
+			&&Data.EvaluatedData.Magnitude!=0.0f)
 		{
 			FGameplayTagContainer HitReactionTagContainer;
 			HitReactionTagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("GameplayAbility.HitReaction")));

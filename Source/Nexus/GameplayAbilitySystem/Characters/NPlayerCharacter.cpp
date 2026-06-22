@@ -41,6 +41,7 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EIC->BindAction(ShootProjectileAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_ShootProjectile);
 		EIC->BindAction(AOEAttackTargettingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_AOEAttackTargeting);
 		EIC->BindAction(AOEAttackTargetConfirmAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_AOEAttackTargetConfirm);
+		EIC->BindAction(ShieldAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Shield);
 	}
 }
 
@@ -189,7 +190,7 @@ void ANPlayerCharacter::Input_AOEAttackTargeting()
 		AOEAbilityTags.AddTag(TAG_GameplayAbility_AOEAttack);
 		ASC->CancelAbilities(&AOEAbilityTags);
 
-		ASC->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
+		//ASC->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
 	}
 	else
 	{
@@ -203,6 +204,16 @@ void ANPlayerCharacter::Input_AOEAttackTargetConfirm()
 	if (ASC)
 	{
 		ASC->TargetConfirm();
+	}
+}
+
+void ANPlayerCharacter::Input_Shield()
+{
+	if (ASC)
+	{
+		FGameplayTagContainer TagContainer;
+		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility.Defensive.Shield")));
+		ASC->TryActivateAbilitiesByTag(TagContainer, true);
 	}
 }
 

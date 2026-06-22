@@ -53,10 +53,10 @@ void UNGA_AOEAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UNGA_AOEAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	
 	GetAbilitySystemComponentFromActorInfo()->RemoveGameplayCue(
 		FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
+
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UNGA_AOEAttack::LoopTargetingAnimation()

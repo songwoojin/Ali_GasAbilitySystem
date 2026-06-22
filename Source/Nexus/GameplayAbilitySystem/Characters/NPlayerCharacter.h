@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* AOEAttackTargetConfirmAction;
 
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* ShieldAction;
+
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
@@ -77,5 +80,6 @@ protected:
 	void Input_ShootProjectile();
 	void Input_AOEAttackTargeting();
 	void Input_AOEAttackTargetConfirm();
+	void Input_Shield();
 	
 };	
