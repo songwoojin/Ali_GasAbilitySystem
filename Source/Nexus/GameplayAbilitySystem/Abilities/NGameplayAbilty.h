@@ -23,4 +23,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere,Category="Ability")
 	bool bShouldShowInAbilitiesBar=false;
+
+protected:
+	bool HasPC();
 };

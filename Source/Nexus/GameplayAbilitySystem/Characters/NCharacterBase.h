@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "Nexus/Interface/NTargetingInterface.h"
 #include "NCharacterBase.generated.h"
 
 class UNBasicAttributeSets;

@@ -11,7 +11,7 @@ public class Nexus : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" ,"EnhancedInput","Niagara"});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities","GameplayTasks","GameplayTags" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities","GameplayTasks","GameplayTags","AIModule","UMG" });
 
 		//PublicIncludePathModuleNames.AddRange(new string[] { "GameplayAbilitySystem"});
 		

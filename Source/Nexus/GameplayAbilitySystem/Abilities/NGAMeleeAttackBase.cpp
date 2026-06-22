@@ -112,11 +112,6 @@ void UNGAMeleeAttackBase::HandleHitScanStart()
 	{
 		return;
 	}
-
-	if (!IsValid(DamageEffectClass))
-	{
-		return;
-	}
 	
 	FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass,1);
 	// SetByCaller 값 넣기

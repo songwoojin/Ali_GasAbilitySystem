@@ -21,8 +21,10 @@ protected:
 	bool bIsWithinComboWindow;
 	bool bIsReceivedInputAtRightTime;
 	int32 ComboCount;
+	bool bAlwaysContinueCombo;
 	
 protected:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void MontageStart() override;
 
 	UFUNCTION()

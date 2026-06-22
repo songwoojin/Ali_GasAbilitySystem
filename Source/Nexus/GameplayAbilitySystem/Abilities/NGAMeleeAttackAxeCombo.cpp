@@ -9,7 +9,20 @@ UNGAMeleeAttackAxeCombo::UNGAMeleeAttackAxeCombo()
 	: bIsWithinComboWindow(false)
 	,bIsReceivedInputAtRightTime(false)
 	,ComboCount(0)
+	,bAlwaysContinueCombo(false)
 {
+}
+
+void UNGAMeleeAttackAxeCombo::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	if (!HasPC())
+	{
+		bAlwaysContinueCombo = true;
+	}
 }
 
 void UNGAMeleeAttackAxeCombo::MontageStart()
@@ -48,7 +61,7 @@ void UNGAMeleeAttackAxeCombo::OnContinueComboStartEventReceived(FGameplayEventDa
 void UNGAMeleeAttackAxeCombo::OnContinueComboEndEventReceived(FGameplayEventData Payload)
 {
 	bIsWithinComboWindow=false;
-	if (bIsReceivedInputAtRightTime)
+	if (bIsReceivedInputAtRightTime || bAlwaysContinueCombo)
 	{
 		ComboCount++;
 	}

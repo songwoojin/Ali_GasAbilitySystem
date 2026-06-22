@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
-#include "NGA_ShootProjectileBsse.generated.h"
+#include "NGA_ShootProjectileBase.generated.h"
 
 class ANProjectileBase;
 /**
  * 
  */
 UCLASS()
-class NEXUS_API UNGA_ShootProjectileBsse : public UNGameplayAbilty
+class NEXUS_API UNGA_ShootProjectileBase : public UNGameplayAbilty
 {
 	GENERATED_BODY()
 
 public:
-	UNGA_ShootProjectileBsse();
+	UNGA_ShootProjectileBase();
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -47,4 +47,6 @@ protected:
 	void OnShootProjectileEventReceived(FGameplayEventData Payload);
 
 	FVector GetSpawnLocation();
+
+	void ShootProjectile(FVector TargetLocation);
 };

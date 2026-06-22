@@ -12,6 +12,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Nexus/Interface/NTargetingInterface.h"
 
 UNGA_AOEAttack::UNGA_AOEAttack()
 	:TargetingMontage(nullptr)
@@ -28,11 +29,34 @@ void UNGA_AOEAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	bIsWaitingTargetData=true;
-	
-	LoopTargetingAnimation();
+	if (HasPC())
+	{
+		bIsWaitingTargetData=true;
+		LoopTargetingAnimation();
+		WaitTargetData();
+	}
+	else
+	{
+		INTargetingInterface* TargetingInterface = Cast<INTargetingInterface>(GetAvatarActorFromActorInfo());
+		if (TargetingInterface)
+		{
+			AActor* TargetActor = TargetingInterface->GetAttackTarget();
+			if (TargetActor)
+			{
+				ConfirmedAOELocation = GetTargetGoundLocation(TargetActor);
+				ConfirmStrike();
+			}
+		}
+	}
+}
 
-	WaitTargetData();
+void UNGA_AOEAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	
+	GetAbilitySystemComponentFromActorInfo()->RemoveGameplayCue(
+		FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
 }
 
 void UNGA_AOEAttack::LoopTargetingAnimation()
@@ -157,6 +181,7 @@ void UNGA_AOEAttack::OnTargetDataReady(const FGameplayAbilityTargetDataHandle& D
 
 void UNGA_AOEAttack::OnTargetDataCancelled(const FGameplayAbilityTargetDataHandle& Data)
 {
+
 }
 
 void UNGA_AOEAttack::ConfirmStrike()
@@ -223,8 +248,8 @@ void UNGA_AOEAttack::OnEventReceived(FGameplayEventData Payload)
 		return;
 	}
 
-	GetAbilitySystemComponentFromActorInfo()->RemoveGameplayCue(
-		FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
+	// GetAbilitySystemComponentFromActorInfo()->RemoveGameplayCue(
+	// 	FGameplayTag::RequestGameplayTag(FName("GameplayCue.AOEIndicator")));
 	
 	const FVector Start = ConfirmedAOELocation;
 	const FVector End   = ConfirmedAOELocation;	
@@ -299,4 +324,31 @@ void UNGA_AOEAttack::ApplyDamageToTarget(AActor* TargetActor)
 	}
 	
 	TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+FVector UNGA_AOEAttack::GetTargetGoundLocation(AActor* AttackTarget)
+{
+	FHitResult HitResult;
+
+	FVector Start = AttackTarget->GetActorLocation();
+	FVector End = Start - FVector(0.0f, 0.0f, 9999.0f);
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(GetAvatarActorFromActorInfo());
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECC_Visibility,
+		Params
+	);
+	
+
+	if (bHit)
+	{
+		return HitResult.Location;
+	}
+
+	return Start;
 }
