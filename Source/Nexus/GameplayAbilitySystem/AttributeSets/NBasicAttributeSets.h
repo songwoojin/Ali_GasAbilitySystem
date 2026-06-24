@@ -37,6 +37,20 @@ public:
 	FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS_BASIC(UNBasicAttributeSets, MaxStamina);
 
+	//Damage
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS_BASIC(UNBasicAttributeSets, Damage);
+
+	//Shield Attributes
+	UPROPERTY(BlueprintReadOnly, Category="Attributes",ReplicatedUsing=OnRep_Shield)
+	FGameplayAttributeData Shield;
+	ATTRIBUTE_ACCESSORS_BASIC(UNBasicAttributeSets, Shield);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes",ReplicatedUsing=OnRep_MaxShield)
+	FGameplayAttributeData MaxShield;
+	ATTRIBUTE_ACCESSORS_BASIC(UNBasicAttributeSets, MaxShield);
+
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -54,4 +68,10 @@ public:
 	
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue) const;
+
+	UFUNCTION()
+	void OnRep_Shield(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION()
+	void OnRep_MaxShield(const FGameplayAttributeData& OldValue) const;
 };

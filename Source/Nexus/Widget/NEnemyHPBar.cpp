@@ -10,10 +10,8 @@
 void UNEnemyHPBar::NativeConstruct()
 {
 	Super::NativeConstruct();
-
 	
 	HPProgressBar->SetPercent(1.0f);
-	
 }
 
 void UNEnemyHPBar::SetOwningActor(AActor* NewOwningActor)

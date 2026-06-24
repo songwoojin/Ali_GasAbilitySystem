@@ -28,10 +28,13 @@ protected:
 	float AttackDuration;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UWidgetComponent* HPWidgetComponent;
+	UWidgetComponent* EnemyWidgetComponent;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> HPWidgetClass;
+	TSubclassOf<UUserWidget> EnemyWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> ShieldGE;
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;

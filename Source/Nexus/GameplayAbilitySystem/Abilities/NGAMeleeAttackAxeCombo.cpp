@@ -83,7 +83,7 @@ void UNGAMeleeAttackAxeCombo::OnContinueComboInputEventReceived(FGameplayEventDa
 
 void UNGAMeleeAttackAxeCombo::OnHitScanStartEventReceived(FGameplayEventData Payload)
 {
-	DamageMagnitude=ComboCount*-25.0f;
+	DamageMagnitude=ComboCount*10.0f;
 
 	UE_LOG(LogTemp, Warning,
 		TEXT("AxeCombo HitScanStart / Authority: %d / ComboCount: %d / DamageMagnitude: %f"),

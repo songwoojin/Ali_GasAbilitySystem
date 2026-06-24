@@ -10,6 +10,9 @@ UNBasicAttributeSets::UNBasicAttributeSets()
 	,MaxHealth(100.0f)
 	,Stamina(100.0f)
 	,MaxStamina(100.0f)
+	,Damage(0.0f)
+	,Shield(0.0f)
+	,MaxShield(100.f)
 {
 }
 
@@ -21,6 +24,8 @@ void UNBasicAttributeSets::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, MaxStamina, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, Shield, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNBasicAttributeSets, MaxShield, COND_None, REPNOTIFY_Always);
 }
 
 void UNBasicAttributeSets::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -35,12 +40,47 @@ void UNBasicAttributeSets::PreAttributeChange(const FGameplayAttribute& Attribut
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStamina());
 	}
+	else if (Attribute ==GetShieldAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxShield());
+	}
 }
 
 void UNBasicAttributeSets::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 
+	if (Data.EvaluatedData.Attribute==GetDamageAttribute())
+	{
+		float TotalDamage=GetDamage();
+		SetDamage(0.f);
+
+		float CurrentShield=GetShield();
+		if (CurrentShield>0.f)
+		{
+			SetShield(CurrentShield-TotalDamage);
+			float RemainingDamage=TotalDamage-CurrentShield;
+			if (RemainingDamage>0.0f)
+			{
+				SetHealth(GetHealth()-RemainingDamage);
+			}
+		}
+		else
+		{
+			SetHealth(GetHealth()-TotalDamage);
+
+			//UE_LOG(LogTemp,Warning,TEXT("Health: %f ,TotalDamage: %f"),GetHealth(),TotalDamage);
+		}
+
+		if (Data.EffectSpec.Def->GetAssetTags().HasTag(FGameplayTag::RequestGameplayTag("Effects.HitReaction"))
+			&&Data.EvaluatedData.Magnitude!=0.0f)
+		{
+			FGameplayTagContainer HitReactionTagContainer;
+			HitReactionTagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("GameplayAbility.HitReaction")));
+			GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(HitReactionTagContainer);
+		}
+	}
+	
 	if (Data.EvaluatedData.Attribute==GetHealthAttribute())
 	{
 		SetHealth(GetHealth());
@@ -90,4 +130,14 @@ void UNBasicAttributeSets::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 void UNBasicAttributeSets::OnRep_MaxStamina(const FGameplayAttributeData& OldValue) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNBasicAttributeSets, MaxStamina, OldValue);
+}
+
+void UNBasicAttributeSets::OnRep_Shield(const FGameplayAttributeData& OldValue) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNBasicAttributeSets, Shield, OldValue);
+}
+
+void UNBasicAttributeSets::OnRep_MaxShield(const FGameplayAttributeData& OldValue) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNBasicAttributeSets, MaxShield, OldValue);
 }

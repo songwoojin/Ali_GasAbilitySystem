@@ -212,7 +212,7 @@ void ANPlayerCharacter::Input_Shield()
 	if (ASC)
 	{
 		FGameplayTagContainer TagContainer;
-		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility.Defensive.Shield")));
+		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility.Defensive")));
 		ASC->TryActivateAbilitiesByTag(TagContainer, true);
 	}
 }

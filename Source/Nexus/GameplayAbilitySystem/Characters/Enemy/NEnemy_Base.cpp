@@ -8,29 +8,29 @@
 #include "AIController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
-#include "Nexus/Widget/NEnemyHPBar.h"
+#include "Nexus/Widget/NEnemyAvatar.h"
 
 ANEnemy_Base::ANEnemy_Base()
 	:AttackDuration(4.0f)
 {
-	HPWidgetComponent =CreateDefaultSubobject<UWidgetComponent>(TEXT("HPWidgetComponent"));
-	HPWidgetComponent->SetupAttachment(GetMesh());
-	HPWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	HPWidgetComponent->SetDrawAtDesiredSize(true);
+	EnemyWidgetComponent =CreateDefaultSubobject<UWidgetComponent>(TEXT("HPWidgetComponent"));
+	EnemyWidgetComponent->SetupAttachment(GetMesh());
+	EnemyWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	EnemyWidgetComponent->SetDrawAtDesiredSize(true);
 }
 
 void ANEnemy_Base::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HPWidgetClass)
+	if (EnemyWidgetComponent)
 	{
-		HPWidgetComponent->SetWidgetClass(HPWidgetClass);
-		HPWidgetComponent->InitWidget();
-		UNEnemyHPBar* HPWidget = Cast<UNEnemyHPBar>(HPWidgetComponent->GetUserWidgetObject());
-		if (HPWidget)
+		EnemyWidgetComponent->SetWidgetClass(EnemyWidgetClass);
+		EnemyWidgetComponent->InitWidget();
+		UNEnemyAvatar* EnemyWidget = Cast<UNEnemyAvatar>(EnemyWidgetComponent->GetUserWidgetObject());
+		if (EnemyWidget)
 		{
-			HPWidget->SetOwningActor(this);
+			EnemyWidget->SetOwningActor(this);
 		}
 	}
 }
@@ -76,6 +76,8 @@ void ANEnemy_Base::SendWeaponEquipEvent()
 		AttackDuration,
 		true
 	);
+
+	ASC->BP_ApplyGameplayEffectToSelf(ShieldGE,1.0f,ASC->MakeEffectContext());
 }
 
 void ANEnemy_Base::Attack()
@@ -127,8 +129,8 @@ void ANEnemy_Base::HandleDeath()
 {
 	Super::HandleDeath();
 
-	if (HPWidgetComponent)
+	if (EnemyWidgetComponent)
 	{
-		HPWidgetComponent->DestroyComponent();
+		EnemyWidgetComponent->DestroyComponent();
 	}
 }
