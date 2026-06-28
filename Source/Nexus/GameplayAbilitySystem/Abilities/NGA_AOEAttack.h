@@ -77,4 +77,9 @@ protected:
 	void ApplyDamageToTarget(AActor* TargetActor);
 
 	FVector GetTargetGoundLocation(AActor* AttackTarget);
+
+	void WaitCancleInput();
+
+	UFUNCTION()
+	void OnInputPressed(float WaitedTime);
 };

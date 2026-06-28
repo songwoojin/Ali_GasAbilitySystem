@@ -10,6 +10,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Nexus/Component/NWeaponsManagerComponent.h"
 #include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
 
 ANPlayerCharacter::ANPlayerCharacter()
 	:DashAction(nullptr)
@@ -31,17 +32,21 @@ void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EIC->BindAction(DashAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Dash);
+		//EIC->BindAction(DashAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Dash);
 		
 		EIC->BindAction(EquipStaffAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipStaff);
 		//EIC->BindAction(EquipStaffAction, ETriggerEvent::Completed, this, &ANPlayerCharacter::Input_UnequipStaff);
 		EIC->BindAction(EquipAxeAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_EquipAxe);
-		EIC->BindAction(MeleeAttackAxeSwingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeSwing);
-		EIC->BindAction(MeleeAttackAxeComboAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeCombo);
-		EIC->BindAction(ShootProjectileAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_ShootProjectile);
-		EIC->BindAction(AOEAttackTargettingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_AOEAttackTargeting);
+		//EIC->BindAction(MeleeAttackAxeSwingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeSwing);
+		//EIC->BindAction(MeleeAttackAxeComboAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MeleeAttackAxeCombo);
+		//EIC->BindAction(ShootProjectileAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_ShootProjectile);
+		//EIC->BindAction(AOEAttackTargettingAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_AOEAttackTargeting);
 		EIC->BindAction(AOEAttackTargetConfirmAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_AOEAttackTargetConfirm);
-		EIC->BindAction(ShieldAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Shield);
+		//EIC->BindAction(ShieldAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_Shield);
+		EIC->BindAction(PrimaryAbilityAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_PrimaryAbility);
+		EIC->BindAction(SecondaryAbilityAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_SecondaryAbility);
+		EIC->BindAction(DefensiveAbilityAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_DefensiveAbility);
+		EIC->BindAction(MovementAbilityAction, ETriggerEvent::Started, this, &ANPlayerCharacter::Input_MovementAbility);
 	}
 }
 
@@ -201,6 +206,8 @@ void ANPlayerCharacter::Input_AOEAttackTargeting()
 
 void ANPlayerCharacter::Input_AOEAttackTargetConfirm()
 {
+	UE_LOG(LogTemp, Warning, TEXT("TargetConfirm Input Called"));
+	
 	if (ASC)
 	{
 		ASC->TargetConfirm();
@@ -215,5 +222,31 @@ void ANPlayerCharacter::Input_Shield()
 		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility.Defensive")));
 		ASC->TryActivateAbilitiesByTag(TagContainer, true);
 	}
+}
+
+void ANPlayerCharacter::PressAbilityInputID(EAbilityInputID InputID)
+{
+	int32 InputIDNum=static_cast<int32>(InputID);
+	ASC->PressInputID(InputIDNum); 
+}
+
+void ANPlayerCharacter::Input_PrimaryAbility()
+{
+	PressAbilityInputID(EAbilityInputID::PrimaryAbility);
+}
+
+void ANPlayerCharacter::Input_SecondaryAbility()
+{
+	PressAbilityInputID(EAbilityInputID::SecondaryAbility);
+}
+
+void ANPlayerCharacter::Input_DefensiveAbility()
+{
+	PressAbilityInputID(EAbilityInputID::DefensiveAbility);
+}
+
+void ANPlayerCharacter::Input_MovementAbility()
+{
+	PressAbilityInputID(EAbilityInputID::MovementAbility);
 }
 

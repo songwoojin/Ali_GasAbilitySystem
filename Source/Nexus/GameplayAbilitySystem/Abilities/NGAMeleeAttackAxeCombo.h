@@ -37,5 +37,10 @@ protected:
 	void OnContinueComboInputEventReceived(FGameplayEventData Payload);
 
 	virtual void OnHitScanStartEventReceived(FGameplayEventData Payload) override;
+
+	void WaitContinueCombo();
+	
+	UFUNCTION()
+	void OnInputPressed(float TimeWaited);
 	
 };

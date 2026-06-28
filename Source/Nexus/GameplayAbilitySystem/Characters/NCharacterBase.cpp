@@ -8,6 +8,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
 
 // Sets default values
 ANCharacterBase::ANCharacterBase()
@@ -74,11 +75,14 @@ TArray<FGameplayAbilitySpecHandle> ANCharacterBase::GrantAbilities(
 
 	for (TSubclassOf<UGameplayAbility> AbilityClass : AbilitiesToGrant)
 	{
-		if (AbilityClass)
+		int32 InputID=-1;
+		if (const UNGameplayAbilty* NexusAbilityCDO = GetDefault<UNGameplayAbilty>(AbilityClass))
 		{
-			FGameplayAbilitySpecHandle SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(AbilityClass,1,-1,this));
-			AbilitiesHandles.Add(SpecHandle);
+			InputID=static_cast<int32>(NexusAbilityCDO->GetAbilityInputID());
 		}
+		
+		FGameplayAbilitySpecHandle SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(AbilityClass,1,InputID,this));
+		AbilitiesHandles.Add(SpecHandle);
 	}
 
 	SendAbilitiesChangedEvent();

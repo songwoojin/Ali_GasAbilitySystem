@@ -7,6 +7,8 @@
 #include "GameFramework/RootMotionSource.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../NGameplayTagContainer.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UNDashAbility::UNDashAbility()
 	:Strength(2000.0f)
@@ -26,19 +28,41 @@ void UNDashAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 
 	CommitAbilityCost(Handle, ActorInfo, ActivationInfo);
 
+	/*
+	if (!TriggerEventData)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TargetDataHandle is invalid"));
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		return;
+	}
+	
+	if (!TriggerEventData->TargetData.IsValid(0))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TargetDataHandle is invalid"));
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		return;
+	}
+	
 	const FHitResult* Hit = TriggerEventData->TargetData.Get(0)->GetHitResult();
+	if (!Hit)
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		return;
+	}
+	
 	FVector HitLocation = Hit->Location;
 	if (HitLocation==FVector::ZeroVector)
 	{
 		HitLocation+=GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	}
+	*/
 	
 	//UE_LOG(LogTemp, Warning, TEXT("Active Dash Ability"));
 	UAbilityTask_ApplyRootMotionConstantForce* Task =
 		UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
 			this,
 			NAME_None,
-			HitLocation,
+			GetDashDirection(),
 			Strength,     // Strength
 			Duration,       // Duration
 			false,      // bIsAdditive
@@ -119,9 +143,28 @@ void UNDashAbility::OnDashFinished()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
+FVector UNDashAbility::GetDashDirection()
+{
+	FVector TargetLocation=GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	
+	ACharacter* NCharacter = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+	if (!NCharacter)
+	{
+		return TargetLocation;
+	}
+
+	TargetLocation = NCharacter->GetCharacterMovement()->GetCurrentAcceleration();
+	if (TargetLocation==FVector::ZeroVector)
+	{
+		return GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	}
+
+	return TargetLocation;
+}
+
 bool UNDashAbility::CommitAbilityCost(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	FGameplayTagContainer* OptionalRelevantTags)
+                                      const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                      FGameplayTagContainer* OptionalRelevantTags)
 {
 	return Super::CommitAbilityCost(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
 }

@@ -2,8 +2,11 @@
 
 
 #include "Nexus/GameplayAbilitySystem/Abilities/NGAMeleeAttackAxeCombo.h"
+
+#include "NDashAbility.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Nexus/GameplayAbilitySystem/NGameplayTagContainer.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 
 UNGAMeleeAttackAxeCombo::UNGAMeleeAttackAxeCombo()
 	: bIsWithinComboWindow(false)
@@ -43,12 +46,16 @@ void UNGAMeleeAttackAxeCombo::MontageStart()
 		ContinueComboEndTask->ReadyForActivation();
 	}
 
+	/*
 	UAbilityTask_WaitGameplayEvent* ContinueComboInputTask =UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this,TAG_Event_ContinueCombo_Input);
 	if (ContinueComboInputTask)
 	{
 		ContinueComboInputTask->EventReceived.AddDynamic(this,&UNGAMeleeAttackAxeCombo::OnContinueComboInputEventReceived);
 		ContinueComboInputTask->ReadyForActivation();
 	}
+	*/
+
+	WaitContinueCombo();
 	
 }
 
@@ -93,3 +100,21 @@ void UNGAMeleeAttackAxeCombo::OnHitScanStartEventReceived(FGameplayEventData Pay
 	
 	Super::OnHitScanStartEventReceived(Payload);
 }
+
+void UNGAMeleeAttackAxeCombo::WaitContinueCombo()
+{
+	UAbilityTask_WaitInputPress* WaitTask=UAbilityTask_WaitInputPress::WaitInputPress(this);
+	if (WaitTask)
+	{
+		WaitTask->OnPress.AddDynamic(this,&UNGAMeleeAttackAxeCombo::OnInputPressed);
+		WaitTask->ReadyForActivation();
+	}
+}
+
+void UNGAMeleeAttackAxeCombo::OnInputPressed(float TimeWaited)
+{
+	bIsReceivedInputAtRightTime=bIsWithinComboWindow;
+
+	WaitContinueCombo();
+}
+

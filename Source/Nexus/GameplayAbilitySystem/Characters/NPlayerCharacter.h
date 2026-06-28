@@ -16,6 +16,9 @@ class UNWeaponsManagerComponent;
 /**
  * 
  */
+
+enum class EAbilityInputID : uint8;
+
 UCLASS()
 class NEXUS_API ANPlayerCharacter : public ANCharacterBase
 {
@@ -49,6 +52,18 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Input")
 	UInputAction* ShieldAction;
 
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* PrimaryAbilityAction;
+	
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* SecondaryAbilityAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* DefensiveAbilityAction;
+
+	UPROPERTY(EditAnywhere,Category="Input")
+	UInputAction* MovementAbilityAction;
+
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
@@ -76,10 +91,18 @@ protected:
 	//UFUNCTION(BlueprintCallable)
 	//FGameplayAbilitySpecHandle GetDashAbilitySpecHandle() const {return DashAbilitySpecHandle;};
 
+	//Enhanced Input
 	void Input_MeleeAttackAxeCombo();
 	void Input_ShootProjectile();
 	void Input_AOEAttackTargeting();
 	void Input_AOEAttackTargetConfirm();
 	void Input_Shield();
+
+	//Ability Input
+	void PressAbilityInputID(EAbilityInputID InputID);
+	void Input_PrimaryAbility();
+	void Input_SecondaryAbility();
+	void Input_DefensiveAbility();
+	void Input_MovementAbility();
 	
 };	

@@ -12,6 +12,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Nexus/Interface/NTargetingInterface.h"
 
 UNGA_AOEAttack::UNGA_AOEAttack()
@@ -34,6 +35,7 @@ void UNGA_AOEAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		bIsWaitingTargetData=true;
 		LoopTargetingAnimation();
 		WaitTargetData();
+		WaitCancleInput();
 	}
 	else
 	{
@@ -351,4 +353,19 @@ FVector UNGA_AOEAttack::GetTargetGoundLocation(AActor* AttackTarget)
 	}
 
 	return Start;
+}
+
+void UNGA_AOEAttack::WaitCancleInput()
+{
+	UAbilityTask_WaitInputPress* WaitTask=UAbilityTask_WaitInputPress::WaitInputPress(this);
+	if (WaitTask)
+	{
+		WaitTask->OnPress.AddDynamic(this,&UNGA_AOEAttack::OnInputPressed);
+		WaitTask->ReadyForActivation();
+	}
+}
+
+void UNGA_AOEAttack::OnInputPressed(float WaitedTime)
+{
+	CancelAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo,true);
 }
