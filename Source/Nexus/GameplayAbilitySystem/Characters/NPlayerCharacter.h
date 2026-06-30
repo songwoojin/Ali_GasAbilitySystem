@@ -67,6 +67,9 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<UGameplayEffect> RegenStaminaGE;
 
+	UPROPERTY(EditAnywhere,Category="Ability")
+	TSubclassOf<UGameplayAbility> RegenStaminaGA;
+
 	//FGameplayAbilitySpecHandle DashAbilitySpecHandle;
 
 	UPROPERTY(VisibleAnywhere)
@@ -77,6 +80,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 	void Input_Dash();

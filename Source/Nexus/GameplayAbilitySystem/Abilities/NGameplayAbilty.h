@@ -28,14 +28,19 @@ class NEXUS_API UNGameplayAbilty : public UGameplayAbility
 public:
 	UNGameplayAbilty();
 	
-	UFUNCTION(BlueprintCallable,Category="Ability")
+	UFUNCTION(BlueprintCallable,Category="UI")
 	bool GetShouldShowInAbilitiesBar() const {return bShouldShowInAbilitiesBar;};
 
 	EAbilityInputID GetAbilityInputID() const {return AbilityInputID;};
+
+	bool GetAutoActivateWhenGranted() const {return AutoActivateWhenGranted;};
 	
 protected:
-	UPROPERTY(EditAnywhere,Category="Ability")
+	UPROPERTY(EditAnywhere,Category="UI")
 	bool bShouldShowInAbilitiesBar=false;
+
+	UPROPERTY(EditAnywhere,Category="Activation")
+	bool AutoActivateWhenGranted=false;
 
 	UPROPERTY(EditAnywhere,Category="Input")
 	EAbilityInputID AbilityInputID= EAbilityInputID::None;

@@ -57,23 +57,44 @@ void ANProjectileBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 void ANProjectileBase::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!HasAuthority())
+	{
+		return;
+	}
+	
 	if (OtherActor == GetInstigator())
 	{
 		return;
 	}
 
-	IAbilitySystemInterface* OtherASI = Cast<IAbilitySystemInterface>(OtherActor);
-	if (OtherASI)
+	IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(GetInstigator());
+	if (!ASI)
 	{
-		UAbilitySystemComponent* OtherASC=OtherASI->GetAbilitySystemComponent();
-		if (OtherASC)
-		{
-			if (HasAuthority())
-			{
-				OtherASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-			}
-		}
+		return;
 	}
+
+	UAbilitySystemComponent* ASC=ASI->GetAbilitySystemComponent();
+	if (!ASC)
+	{
+		return;
+	}
+
+	IAbilitySystemInterface* OtherASI = Cast<IAbilitySystemInterface>(OtherActor);
+	if (!OtherASI)
+	{
+		return;
+	}
+
+	UAbilitySystemComponent* OtherASC=OtherASI->GetAbilitySystemComponent();
+	if (!OtherASC)
+	{
+		return;
+	}
+
+	OtherASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+
+	//디버프
+	ASC->ApplyGameplayEffectToTarget(DebuffFireEffectClass.GetDefaultObject(),OtherASC,1.0f);
 
 	ImpactProjectileCue();
 	Destroy();

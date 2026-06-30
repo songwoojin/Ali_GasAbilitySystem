@@ -22,8 +22,23 @@ void ANPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
 	ASC->GetGameplayAttributeValueChangeDelegate(UNBasicAttributeSets::GetStaminaAttribute()).AddUObject(
 		this, &ThisClass::HandleStaminaChanged);
+		*/
+}
+
+void ANPlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	/*
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+		{
+			ASC->TryActivateAbilityByClass(RegenStaminaGA);
+		}
+	);
+	*/
 }
 
 void ANPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

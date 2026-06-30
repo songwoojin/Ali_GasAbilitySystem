@@ -41,6 +41,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTag GameplayCueImpact;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> DebuffFireEffectClass;
 	
 protected:
 	virtual void BeginPlay() override;
