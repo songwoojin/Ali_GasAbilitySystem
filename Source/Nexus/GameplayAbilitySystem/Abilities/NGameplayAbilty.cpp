@@ -9,6 +9,14 @@ UNGameplayAbilty::UNGameplayAbilty()
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
 }
 
+void UNGameplayAbilty::SetAbilityLevel(int32 NewLevel)
+{
+	if (FGameplayAbilitySpec* AbilitySpec=GetCurrentAbilitySpec())
+	{
+		AbilitySpec->Level = NewLevel;
+	}
+}
+
 bool UNGameplayAbilty::HasPC()
 {
 	APawn* NPawn = Cast<APawn>(GetAvatarActorFromActorInfo());

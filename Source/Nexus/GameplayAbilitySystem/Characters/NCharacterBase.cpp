@@ -64,7 +64,7 @@ void ANCharacterBase::PossessedBy(AController* NewController)
 }
 
 TArray<FGameplayAbilitySpecHandle> ANCharacterBase::GrantAbilities(
-	TArray<TSubclassOf<UGameplayAbility>> AbilitiesToGrant)
+	TArray<TSubclassOf<UGameplayAbility>> AbilitiesToGrant,const int32 Level)
 {	
 	if (!ASC || !HasAuthority())
 	{
@@ -83,7 +83,7 @@ TArray<FGameplayAbilitySpecHandle> ANCharacterBase::GrantAbilities(
 			ShouldActivate = NexusAbilityCDO->GetAutoActivateWhenGranted();
 		}
 		
-		FGameplayAbilitySpecHandle SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(AbilityClass,1,InputID,this));
+		FGameplayAbilitySpecHandle SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(AbilityClass,Level,InputID,this));
 		AbilitiesHandles.Add(SpecHandle);
 
 		if (ShouldActivate)

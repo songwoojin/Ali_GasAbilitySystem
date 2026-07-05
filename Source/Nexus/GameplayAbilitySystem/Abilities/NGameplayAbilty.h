@@ -35,6 +35,7 @@ public:
 
 	bool GetAutoActivateWhenGranted() const {return AutoActivateWhenGranted;};
 	
+	void SetAbilityLevel(int32 NewLevel);
 protected:
 	UPROPERTY(EditAnywhere,Category="UI")
 	bool bShouldShowInAbilitiesBar=false;
@@ -44,6 +45,7 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Input")
 	EAbilityInputID AbilityInputID= EAbilityInputID::None;
+
 
 protected:
 	bool HasPC();

@@ -12,6 +12,7 @@ class UGameplayAbility;
 class UGameplayEffect;
 class UInputAction;
 class UNWeaponsManagerComponent;
+class UNTalentTreeComponent;
 
 /**
  * 
@@ -74,6 +75,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UNWeaponsManagerComponent* WeaponsManager;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	UNTalentTreeComponent* TalentTreeComponent;
 
 public:
 	ANPlayerCharacter();

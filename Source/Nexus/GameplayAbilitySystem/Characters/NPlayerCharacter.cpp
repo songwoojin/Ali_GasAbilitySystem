@@ -11,11 +11,14 @@
 #include "Nexus/Component/NWeaponsManagerComponent.h"
 #include "Nexus/GameplayAbilitySystem/NAbilitySystemComponent.h"
 #include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
+#include "Nexus/GameplayAbilitySystem/Talent/NTalentTreeComponent.h"
 
 ANPlayerCharacter::ANPlayerCharacter()
 	:DashAction(nullptr)
 {
 	WeaponsManager=CreateDefaultSubobject<UNWeaponsManagerComponent>("WeaponsManager");
+	TalentTreeComponent=CreateDefaultSubobject<UNTalentTreeComponent>("TalentTreeComponent");
+	TalentTreeComponent->SetIsReplicated(true);
 }
 
 void ANPlayerCharacter::BeginPlay()
