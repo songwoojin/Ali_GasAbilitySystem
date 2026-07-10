@@ -5,14 +5,12 @@
 #include "PDA_Talent.h"
 #include "Abilities/GameplayAbility.h"
 #include "Net/UnrealNetwork.h"
-#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
 #include "Nexus/GameplayAbilitySystem/Characters/NCharacterBase.h"
 
 UNTalentTreeComponent::UNTalentTreeComponent()
 {
-
 	PrimaryComponentTick.bCanEverTick = true;
-
+	
 }
 
 void UNTalentTreeComponent::BeginPlay()
@@ -29,20 +27,19 @@ void UNTalentTreeComponent::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UNTalentTreeComponent, GrantedTalents);
+	DOREPLIFETIME(UNTalentTreeComponent, PointsAvailable);
 }
 
 void UNTalentTreeComponent::OnRep_GrantedTalents()
 {
+	OnTalentsChanged.Broadcast();
 }
 
-void UNTalentTreeComponent::GrantTalent(UPDA_Talent* Talent,int32 StartingLevel)
+bool UNTalentTreeComponent::GrantTalent(UPDA_Talent* Talent,int32 StartingLevel)
 {
-	FGrantedTalent* GrantedTalent;
-	bool Success=false;
-	FindGrantedTalent(Talent,GrantedTalent,Success);
-	if (Success)
+	if (!CanGiveTalent(Talent))
 	{
-		return;
+		return false;
 	}
 
 	StartingLevel = FMath::Clamp(StartingLevel, 1, Talent->MaxLevel);
@@ -50,6 +47,8 @@ void UNTalentTreeComponent::GrantTalent(UPDA_Talent* Talent,int32 StartingLevel)
 	GiveAbilitiesToOwner(Talent,Talent->AbilitiesToGrant,StartingLevel);
 	ApplyGameplayEffectsToOwner(Talent,Talent->EffectsToApply,StartingLevel);
 	GrantedTalents.Add(FGrantedTalent{Talent,StartingLevel});
+
+	return true;
 }
 
 void UNTalentTreeComponent::GiveAbilitiesToOwner(UPDA_Talent* Talent,TArray<TSubclassOf<UGameplayAbility>> Abilities,int32 Level)
@@ -92,9 +91,50 @@ void UNTalentTreeComponent::FindGrantedTalent(UPDA_Talent* Talent,FGrantedTalent
 	Success=false;
 }
 
+bool UNTalentTreeComponent::CanSpendPointsOnTalent(UPDA_Talent* Talent)
+{
+	FGrantedTalent* GrantedTalent;
+	bool Success=false;
+	FindGrantedTalent(Talent,GrantedTalent,Success);
+
+	if (Success)
+	{
+		return CanLevelUpTalent(GrantedTalent);
+	}
+	else
+	{
+		return CanGiveTalent(Talent);
+	}
+}
+
+void UNTalentTreeComponent::DeductTalentPoints()
+{
+	PointsAvailable= PointsAvailable-1;
+	OnRep_AvailablePointsChanged();
+}
+
+bool UNTalentTreeComponent::CanGiveTalent(UPDA_Talent* Talent)
+{
+	FGrantedTalent* GrantedTalent;
+	bool Success=false;
+	FindGrantedTalent(Talent,GrantedTalent,Success);
+
+	return !Success && PointsAvailable>0;
+}
+
+bool UNTalentTreeComponent::CanLevelUpTalent(FGrantedTalent* GrantedTalent)
+{
+	return (GrantedTalent->Talent->MaxLevel > GrantedTalent->Level) && PointsAvailable>0;
+}
+
+void UNTalentTreeComponent::OnRep_AvailablePointsChanged()
+{
+	OnPointsChanged.Broadcast();
+}
+
 bool UNTalentTreeComponent::LevelUpGrantedTalent(FGrantedTalent* GrantedTalent)
 {
-	if (GrantedTalent->Talent->MaxLevel <= GrantedTalent->Level)
+	if (!CanLevelUpTalent(GrantedTalent))
 	{
 		return false;
 	}
@@ -172,13 +212,20 @@ void UNTalentTreeComponent::Server_SpendPointOnTalent_Implementation(UPDA_Talent
 	
 	if (Success)
 	{
-		LevelUpGrantedTalent(GrantedTalent);
+		if (LevelUpGrantedTalent(GrantedTalent))
+		{
+			DeductTalentPoints();
+		}
 	}
 	else
 	{
-		GrantTalent(Talent,1);
+		if (GrantTalent(Talent,1))
+		{
+			DeductTalentPoints();
+		}
 	}
 
+	OnRep_GrantedTalents();
 }
 
 
