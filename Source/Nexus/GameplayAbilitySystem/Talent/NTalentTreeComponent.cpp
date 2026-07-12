@@ -19,6 +19,14 @@ void UNTalentTreeComponent::BeginPlay()
 	
 	OwnerCharacter=Cast<ANCharacterBase>(GetOwner());
 	OwnerASC=OwnerCharacter?OwnerCharacter->GetAbilitySystemComponent():nullptr;
+
+	if (OwnerCharacter->HasAuthority())
+	{
+		for (FGrantedTalent& GrantedTalent : DefaultTalents)
+		{
+			GrantTalent(GrantedTalent.Talent,GrantedTalent.Level,true);
+		}
+	}
 	
 }
 
@@ -35,9 +43,9 @@ void UNTalentTreeComponent::OnRep_GrantedTalents()
 	OnTalentsChanged.Broadcast();
 }
 
-bool UNTalentTreeComponent::GrantTalent(UPDA_Talent* Talent,int32 StartingLevel)
+bool UNTalentTreeComponent::GrantTalent(UPDA_Talent* Talent,int32 StartingLevel,bool SkipPointsCheck)
 {
-	if (!CanGiveTalent(Talent))
+	if (!CanGiveTalent(Talent,SkipPointsCheck))
 	{
 		return false;
 	}
@@ -103,7 +111,7 @@ bool UNTalentTreeComponent::CanSpendPointsOnTalent(UPDA_Talent* Talent)
 	}
 	else
 	{
-		return CanGiveTalent(Talent);
+		return CanGiveTalent(Talent,false);
 	}
 }
 
@@ -113,13 +121,13 @@ void UNTalentTreeComponent::DeductTalentPoints()
 	OnRep_AvailablePointsChanged();
 }
 
-bool UNTalentTreeComponent::CanGiveTalent(UPDA_Talent* Talent)
+bool UNTalentTreeComponent::CanGiveTalent(UPDA_Talent* Talent,bool SkipPointsCheck)
 {
 	FGrantedTalent* GrantedTalent;
 	bool Success=false;
 	FindGrantedTalent(Talent,GrantedTalent,Success);
 
-	return !Success && PointsAvailable>0;
+	return !Success && (PointsAvailable>0 || SkipPointsCheck);
 }
 
 bool UNTalentTreeComponent::CanLevelUpTalent(FGrantedTalent* GrantedTalent)
@@ -219,7 +227,7 @@ void UNTalentTreeComponent::Server_SpendPointOnTalent_Implementation(UPDA_Talent
 	}
 	else
 	{
-		if (GrantTalent(Talent,1))
+		if (GrantTalent(Talent,1,false))
 		{
 			DeductTalentPoints();
 		}

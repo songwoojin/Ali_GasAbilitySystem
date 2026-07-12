@@ -100,12 +100,15 @@ protected:
 
 	UPROPERTY(EditAnywhere,ReplicatedUsing=OnRep_AvailablePointsChanged)
 	int32 PointsAvailable = 10;
+
+	UPROPERTY(EditAnywhere)
+	TArray<FGrantedTalent> DefaultTalents;
 	
 protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
-	bool GrantTalent(UPDA_Talent* Talent,int32 StartingLevel);
+	bool GrantTalent(UPDA_Talent* Talent,int32 StartingLevel,bool SkipPointsCheck);
 	
 	UFUNCTION()
 	void OnRep_GrantedTalents();
@@ -120,7 +123,7 @@ protected:
 	void SetLevelOfAbilitiesGrantedByTalent(UPDA_Talent* Talent);
 	void SetLevelOfEffectsGrantedByTalent(UPDA_Talent* Talent);
 	void DeductTalentPoints();
-	bool CanGiveTalent(UPDA_Talent* Talent);
+	bool CanGiveTalent(UPDA_Talent* Talent,bool SkipPointsCheck);
 	bool CanLevelUpTalent(FGrantedTalent* GrantedTalent);
 	
 };

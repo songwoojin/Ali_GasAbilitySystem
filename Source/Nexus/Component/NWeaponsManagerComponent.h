@@ -12,16 +12,25 @@ struct FGameplayAbilitySpecHandle;
 class ANCharacterBase;
 class ANWeapon_Base;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponChanged);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class NEXUS_API UNWeaponsManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(BlueprintAssignable, Category="Weapon")
+	FOnWeaponChanged OnWeaponChanged;
+	
 public:	
 	UNWeaponsManagerComponent();
 	void EquipWeapon(const TSubclassOf<ANWeapon_Base>& EquippedWeaponClass);
 	void UnEquipWeapon();
+
+	UFUNCTION(BlueprintCallable)
 	ANWeapon_Base* GetEquippedWeapon() const {return EquippedWeapon;};
+
 	UFUNCTION(NetMulticast, Reliable)
 	void ApplyWeaponState();
 	
@@ -35,8 +44,8 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Weapon")
 	FWeaponConfig UnarmedWeaponConfig;
 
-	UPROPERTY()
-	TArray<FGameplayAbilitySpecHandle> AbilitesGrantedByWeapon;
+	//UPROPERTY()
+	//TArray<FGameplayAbilitySpecHandle> AbilitesGrantedByWeapon;
 
 	UPROPERTY(EditAnywhere,Category="StartingWeapon")
 	TArray<TSubclassOf<ANWeapon_Base>> StartingWeaponClasses;

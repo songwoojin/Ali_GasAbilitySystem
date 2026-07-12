@@ -56,6 +56,7 @@ void UNWeaponsManagerComponent::SetEquippedWeaponProperties()
 	OwningCharacter->GetCharacterMovement()->MaxWalkSpeed=EquippedWeapon->GetWeaponConfig().MovementProperties.MaxWalkSpeed;
 	OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement=EquippedWeapon->GetWeaponConfig().MovementProperties.bOrientRotationToMovement;
 	OwningCharacter->GetCharacterMovement()->bUseControllerDesiredRotation=EquippedWeapon->GetWeaponConfig().MovementProperties.bUseControllerDesiredRotation;
+	
 }
 
 void UNWeaponsManagerComponent::SetUnarmedWeaponProperties()
@@ -160,7 +161,7 @@ void UNWeaponsManagerComponent::EquipWeapon(const TSubclassOf<ANWeapon_Base>& Eq
 	
 	if (EquippedWeapon)
 	{
-		AbilitesGrantedByWeapon = OwningCharacter->GrantAbilities(EquippedWeapon->GetWeaponConfig().AbilitiesToGrant);
+		//AbilitesGrantedByWeapon = OwningCharacter->GrantAbilities(EquippedWeapon->GetWeaponConfig().AbilitiesToGrant);
 		AttachWeapon(EquippedWeaponClass);
 	}
 }
@@ -172,8 +173,8 @@ void UNWeaponsManagerComponent::UnEquipWeapon()
 	DetachWeapon();
 	
 	EquippedWeapon=nullptr;
-	OwningCharacter->RemoveAbilities(AbilitesGrantedByWeapon);
-	AbilitesGrantedByWeapon.Empty();
+	//OwningCharacter->RemoveAbilities(AbilitesGrantedByWeapon);
+	//AbilitesGrantedByWeapon.Empty();
 }
 
 void UNWeaponsManagerComponent::ApplyWeaponState_Implementation()
@@ -186,6 +187,8 @@ void UNWeaponsManagerComponent::ApplyWeaponState_Implementation()
 	{
 		SetUnarmedWeaponProperties();
 	}
+
+	OnWeaponChanged.Broadcast();
 }
 
 

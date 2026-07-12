@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGA_Weapon.h"
 #include "NGA_AOEAttack.generated.h"
 
 class AGameplayAbilityTargetActor_GroundTrace;
@@ -12,7 +12,7 @@ class AGameplayAbilityTargetActor_GroundTrace;
  */
 
 UCLASS()
-class NEXUS_API UNGA_AOEAttack : public UNGameplayAbilty
+class NEXUS_API UNGA_AOEAttack : public UNGA_Weapon
 {
 	GENERATED_BODY()
 

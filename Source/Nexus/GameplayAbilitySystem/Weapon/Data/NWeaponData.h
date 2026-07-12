@@ -12,10 +12,7 @@ USTRUCT(BlueprintType)
 struct FWeaponConfig
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<UGameplayAbility>> AbilitiesToGrant;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName EquippedSocketName=FName("None");
 

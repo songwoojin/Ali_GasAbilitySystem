@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGA_Weapon.h"
 #include "NGA_FillShield.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class NEXUS_API UNGA_FillShield : public UNGameplayAbilty
+class NEXUS_API UNGA_FillShield : public UNGA_Weapon
 {
 	GENERATED_BODY()
 

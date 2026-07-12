@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Nexus/GameplayAbilitySystem/Abilities/NGameplayAbilty.h"
+#include "Nexus/GameplayAbilitySystem/Abilities/NGA_Weapon.h"
 #include "NGAMeleeAttackBase.generated.h"
 
 class ANWeapon_Base;
@@ -11,7 +11,7 @@ class ANWeapon_Base;
  * 
  */
 UCLASS()
-class NEXUS_API UNGAMeleeAttackBase : public UNGameplayAbilty
+class NEXUS_API UNGAMeleeAttackBase : public UNGA_Weapon
 {
 	GENERATED_BODY()
 
